@@ -3,7 +3,7 @@
 
 
 <div align ="center"> 
-  <h3 style="italic">Draw what your heart desires with this full stack application.</h3>
+  <h3 style="italic">Draw what your heart desires with this full stack application.</h3>
 
 
 ![updatedDevDraw-2](https://user-images.githubusercontent.com/101071525/171235459-d14a068c-6269-47a9-b482-f31941df7030.png)
@@ -53,13 +53,14 @@
 * Built-in mobile responsive feature that allows you to draw from any phone screen
 
 ## What was learned 
-* With this project, you are able to create your own art through a collaborative canvas with numerous features. Through the use of javascript, node.js, html and css, we were able to bring this canvas to life and as simple as possible for users to use.  
+* With this project, you are able to create your own art through a collaborative canvas with numerous features. Through the use of javascript, node.js, html and css, we were able to bring this canvas to life and as simple as possible for users to use.  
 
 ### Optimizations
-* Adding media queries to enhance the application's responsive web design
+* Adding media queries to enhance the application's responsive web design on the homepage
 * Implementing new toolbar features to facilitate a variety of drawing techniques
 * Adding a save button that allows users to save their drawings to their devices
 * Including image urls where users can grab their image embedded code
+* Using browser developer tools that help to debug browser compatability tests
 
 ## Node Dependencies
 "dependencies": {  <br> 
@@ -73,4 +74,4 @@
 <h3> Install node.js</h3>
 Steps to install [node](https://nodejs.org/en/) 
 -
-  
+  

@@ -5,27 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.4/html2canvas.min.js"></script>
-    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>    
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a995213cd6.js" crossorigin="anonymous"></script> 
+    <title>Dev Draw</title>
 </head>
 <body>
-    <section class="container">
-        <div id="toolbar">
-            <h1>Draw</h1>
-            <label for ="stroke"> Stroke </label>
-            <input id='stroke' name='stroke' type='color'>
-            <label> Line Width </label>
-            <input id="lineWidth" name = "lineWidth" type = "number" max="10" min="1">
-            <button id="clear"> Clear </button>
-            <button onclick="capture()"> Capture </button>
-        </div>
-        <div class="drawing-board">
-            <canvas id="drawing-board"></canvas>
-        </div>
-    </section>
+    <div><h1>Draw!</h1></div>
+<center><canvas id="canvas"></canvas></center>
+      <div class="tools">
+        <button onclick="Restore()"><i class="fa-solid fa-rotate-left"></i></button>
+        <button onclick="Clear()"><i class="fa-solid fa-xmark"></i></button>
+        <div onclick="change_color(this)" class="stroke-color" style="background: #be5e6b"></div>
+        <div onclick="change_color(this)" class="stroke-color" style="background:#b8cbfd"></div>
+        <div onclick="change_color(this)" class="stroke-color" style="background:#d7bfcb"></div>
+        <div onclick="change_color(this)" class="stroke-color" style="background:#eea5a7"></div>
 
+        <input type="color" 
+        oninput="stroke_color = this.value">
+        <input type="range" min="1" max="100" class="pen-range"
+        oninput="stroke_width = this.value">
+
+      </div>
+    </div>
     <script src="main.js"></script>
-    
 
 </body>
 </html>

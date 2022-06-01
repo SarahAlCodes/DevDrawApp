@@ -1,82 +1,92 @@
-const canvas = document.getElementById('drawing-board');
-const ctx = canvas.getContext('2d');
-const toolbar = document.getElementById('toolbar');
-const save = document.getElementById('save-to-local-storage');
+//Global variable declarations.
+let canvas = document.getElementById("canvas"); //Reference for the canvas element.
+canvas.width = window.innerWidth - 60; // For the width of the canvas
+canvas.height = window.innerHeight * 0.6; //For the height of the canvas
+let context = canvas.getContext("2d"); //Allows user to draw in 2d
+context.fillStyle = "white"; // For the canvas to be white 
+context.fillRect(0, 0, canvas.width, canvas.height); //Draws the rectangle for the canvas
+let restore_array = []; //For the undo button
+let start_index = -1; //For the undo button
+let stroke_color = 'black'; //Default stroke color
+let stroke_width = "2"; //Default stroke width
+let is_drawing = false; //is_drawing function is false by default
 
-const canvasOffsetX = canvas.offsetLeft;
-const canvasOffsetY = canvas.offsetTop;
+function change_color(element) { 
+  stroke_color = element.style.background;
+} //This function changes stroke color
 
-/*var url = canvas.toDataURL();
-localStorage.setItem('url', url);
-var toDrawUrl = localStorage.getItem('url');
-drawDataURIOnCanvas(toDrawUrl, ctx);
-ctx.fillStyle = "rgb(200,200,0)";
-ctx.fillRect (20, 20, 55, 50);*/
+function change_width(element) {
+  stroke_width = element.innerHTML
+} //This function changes stroke width
 
+function start(event) { 
+  is_drawing = true;
+  context.beginPath();
+  context.moveTo(getX(event), getY(event));
+  event.preventDefault(); //Stops the default action from happening
+} //This function is for when the user begins to draw
 
-/*function drawDataURIOnCanvas(strDataURI, context) {
-    "use strict";
-    var img = new window.Image();
-    img.addEventListener("load", function () {
-        context.drawImage(img, 0, 0);
-    });
-    img.setAttribute("src", strDataURI);
-}*/
+function draw(event) { 
+  if (is_drawing) {
+    context.lineTo(getX(event), getY(event));
+    context.strokeStyle = stroke_color;
+    context.lineWidth = stroke_width;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+    context.stroke();
+  }
+  event.preventDefault(); //Stops the default action from happening
+} //This function is for when the user is actively drawing
 
-canvas.width = window.innerWidth - canvasOffsetX;
-canvas.height = window.innerHeight - canvasOffsetY;
-
-let isPainting = false;
-let lineWidth = 5;
-let startX;
-let startY;
-
-toolbar.addEventListener('click', e => {
-    if(e.target.id === 'clear'){
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-    }
-});
-
-toolbar.addEventListener('change', e => {
-    if(e.target.id == 'stroke'){
-        ctx.strokeStyle = e.target.value;
-    }
-    if(e.target.id == 'lineWidth'){
-        lineWidth = e.target.value;
-    }
-});
-
-const draw = (e) => {
-    if(!isPainting){
-        return 
-    }
-    ctx.lineWidth = lineWidth;
-    ctx.lineCap = 'round';
-
-    ctx.lineTo(e.clientX - canvasOffsetX, e.clientY);
-    ctx.stroke();
+function stop(event) { 
+  if (is_drawing) {
+    context.stroke();
+    context.closePath();
+    is_drawing = false;
+  } //This function is for when the user stops drawing
+  event.preventDefault(); //Stops the default action from happening
+  restore_array.push(context.getImageData(0, 0, canvas.width, canvas.height));
+  start_index += 1; 
 }
 
-canvas.addEventListener('mousedown',(e) => {
-    isPainting = true;
-    startX = e.clientX;
-    startY = e.clientY;
-});
+function getX(event) {
+  if (event.pageX == undefined) {return event.targetTouches[0].pageX - canvas.offsetLeft}
+  else {return event.pageX - canvas.offsetLeft}
+  } // Works out the X position of the click inside the canvas from the X position on the page
 
-canvas.addEventListener('mouseup', (e) =>{
-    isPainting = false;
-    ctx.stroke();
-    ctx.beginPath();
-});
 
-canvas.addEventListener('mousemove',draw);
+function getY(event) {
+  if (event.pageY == undefined) {return event.targetTouches[0].pageY - canvas.offsetTop}
+  else {return event.pageY - canvas.offsetTop}
+} // Works out the Y position of the click inside the canvas from the Y position on the page
 
-// Mobile responsive code //
-/*@media only screen 
-  and (min-device-width: 375px) 
-  and (max-device-width: 812px) 
-  and (-webkit-min-device-pixel-ratio: 3) { 
+//Mobile and desktop Eventlisteners for the start, draw, and stop functions:
+canvas.addEventListener("touchstart", start, false);
+canvas.addEventListener("touchmove", draw, false);
+canvas.addEventListener("touchend", stop, false);
+canvas.addEventListener("mousedown", start, false);
+canvas.addEventListener("mousemove", draw, false);
+canvas.addEventListener("mouseup", stop, false);
+canvas.addEventListener("mouseout", stop, false);
 
-}*/
-canvas.addEventListener('touchstart',draw);
-canvas.addEventListener('touchmove',draw);
+
+function Restore() {
+  if (start_index <= 0) {
+    Clear()
+  } else {
+    start_index += -1;
+    restore_array.pop();
+    if ( event.type != 'mouseout' ) {
+      context.putImageData(restore_array[start_index], 0, 0);
+    }
+  }
+}//This function is to undo the most recent path/line drawn. 
+
+
+function Clear() {
+    context.fillStyle = "white";
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    restore_array = [];
+    start_index = -1;
+} //This function clears the drawing altogether.
